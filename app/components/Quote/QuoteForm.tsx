@@ -123,7 +123,7 @@ const QuoteForm = () => {
               <FormControl>
                 <Select>
                   <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Categorias" />
+                    <SelectValue placeholder="¿Cuál es tu tarifa de CFE?" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="pdbt">pdbt</SelectItem>
@@ -150,7 +150,7 @@ const QuoteForm = () => {
               <FormControl>
                 <Select>
                   <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Categorias" />
+                    <SelectValue placeholder="Estado" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="aguascalientes">
