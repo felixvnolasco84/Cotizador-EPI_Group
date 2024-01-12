@@ -95,7 +95,7 @@ const QuoteForm = () => {
               <FormControl>
                 <Input placeholder="Felix Vega" {...field} />
               </FormControl>
-              <FormDescription>denlednk.</FormDescription>
+              {/* <FormDescription>denlednk.</FormDescription> */}
               <FormMessage />
             </FormItem>
           )}
@@ -109,7 +109,7 @@ const QuoteForm = () => {
               <FormControl>
                 <Input placeholder="Polygon" {...field} />
               </FormControl>
-              <FormDescription>denlednk.</FormDescription>
+              {/* <FormDescription>denlednk.</FormDescription> */}
               <FormMessage />
             </FormItem>
           )}
@@ -136,7 +136,7 @@ const QuoteForm = () => {
                   </SelectContent>
                 </Select>
               </FormControl>
-              <FormDescription>denlednk.</FormDescription>
+              {/* <FormDescription>denlednk.</FormDescription> */}
               <FormMessage />
             </FormItem>
           )}
@@ -197,7 +197,7 @@ const QuoteForm = () => {
                   </SelectContent>
                 </Select>
               </FormControl>
-              <FormDescription>denlednk.</FormDescription>
+              {/* <FormDescription>denlednk.</FormDescription> */}
               <FormMessage />
             </FormItem>
           )}
@@ -212,7 +212,7 @@ const QuoteForm = () => {
               <FormControl>
                 <Input placeholder="55329289..." {...field} />
               </FormControl>
-              <FormDescription>denlednk.</FormDescription>
+              {/* <FormDescription>denlednk.</FormDescription> */}
               <FormMessage />
             </FormItem>
           )}
@@ -227,13 +227,13 @@ const QuoteForm = () => {
               <FormControl>
                 <Input placeholder="felix@polygonag.com" {...field} />
               </FormControl>
-              <FormDescription>denlednk.</FormDescription>
+              {/* <FormDescription>denlednk.</FormDescription> */}
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Cotizar</Button>
       </form>
     </Form>
   );
