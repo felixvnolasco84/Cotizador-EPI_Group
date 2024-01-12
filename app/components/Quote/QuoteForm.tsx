@@ -14,9 +14,14 @@ import {
 import * as z from "zod";
 
 const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+  name: z
+    .string()
+    .min(2, {
+      message: "El nombre debe tener al menos 2 carácteres.",
+    })
+    .max(160, {
+      message: "El nombre no puede tener más de 160 carácteres.",
+    }),
   company: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
@@ -26,12 +31,13 @@ const formSchema = z.object({
   monthSpent: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
+  feeType: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
   phoneNumber: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
-  email: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+  email: z.string().email({ message: "Correo electrónico Inválido" }),
 });
 import { Button } from "@/components/ui/button";
 import {
@@ -68,6 +74,12 @@ const QuoteForm = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      company: "",
+      state: "",
+      monthSpent: "",
+      feeType: "",
+      phoneNumber: "",
+      email: "",
     },
   });
 
@@ -104,7 +116,7 @@ const QuoteForm = () => {
         />
         <FormField
           control={form.control}
-          name="state"
+          name="feeType"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Estado donde está tu empresa:</FormLabel>
