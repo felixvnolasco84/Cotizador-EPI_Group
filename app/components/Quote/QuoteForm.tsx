@@ -22,20 +22,25 @@ const formSchema = z.object({
     .max(160, {
       message: "El nombre no puede tener más de 160 carácteres.",
     }),
-  company: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+  company: z
+    .string()
+    .min(2, {
+      message: "El nombre debe tener al menos 2 carácteres.",
+    })
+    .max(160, {
+      message: "El nombre no puede tener más de 160 carácteres.",
+    }),
   state: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+    message: "Valor Incorrecto",
   }),
   monthSpent: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+    message: "Cantidad Incorrecta",
   }),
   feeType: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+    message: "Valor Incorrecto",
   }),
   phoneNumber: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+    message: "Valor Incorrecto",
   }),
   email: z.string().email({ message: "Correo electrónico Inválido" }),
 });
@@ -83,6 +88,9 @@ const QuoteForm = () => {
     },
   });
 
+
+  const { register} = useForm()
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -102,7 +110,21 @@ const QuoteForm = () => {
         />
         <FormField
           control={form.control}
-          name="name"
+          name="monthSpent"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>En promedio, ¿Cuánto pagas de luz cada mes?</FormLabel>
+              <FormControl>
+                <Input placeholder="10000" {...field} />
+              </FormControl>
+              {/* <FormDescription>denlednk.</FormDescription> */}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="company"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Nombre de tu empresa:</FormLabel>
@@ -114,16 +136,17 @@ const QuoteForm = () => {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="feeType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Estado donde está tu empresa:</FormLabel>
+              <FormLabel>¿Cuál es tu tarifa de CFE?</FormLabel>
               <FormControl>
                 <Select>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="¿Cuál es tu tarifa de CFE?" />
+                  <SelectTrigger className="w-[180px]" >
+                    <SelectValue placeholder="Tarifa" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="pdbt">pdbt</SelectItem>
@@ -223,7 +246,7 @@ const QuoteForm = () => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Teléfono celular:</FormLabel>
+              <FormLabel>Email:</FormLabel>
               <FormControl>
                 <Input placeholder="felix@polygonag.com" {...field} />
               </FormControl>
