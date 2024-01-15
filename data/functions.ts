@@ -34,12 +34,3 @@ export function pagoAnualEstimado(
 
   return pagoAnual * incrementoanual;
 }
-
-export function obtenerValorFactor(estado: string) {
-  const estadoIndex = estados.indexOf(estado);
-  if (estadoIndex !== -1) {
-    return valores[estadoIndex][8];
-  } else {
-    return null;
-  }
-}

@@ -3,7 +3,6 @@
 import { potenciaPanel } from "@/data/data";
 import {
   obtenerEnergiaAnual,
-  obtenerValorFactor,
   obtenerValorIncrementoEstimado,
   obtenerValorTarifa,
   pagoAnualEstimado,
@@ -21,20 +20,20 @@ export async function sendEmail(data: any) {
 
   //RESULTADO
   const energiaAnual = obtenerEnergiaAnual(moneyMonthSpent, tarifa!);
-  
+
   const incrementoEstimado = obtenerValorIncrementoEstimado(feeType);
 
   //RESULTADO
   const pagoAnual = pagoAnualEstimado(moneyMonthSpent, incrementoEstimado!);
 
-  const factor = obtenerValorFactor(state);
+  const factor = obtenerValorTarifa(state, "Factor de Generación");
 
   const energiaDia = energiaAnual / 365;
 
-  const energiaGenerada = energiaDia / factor!;
+  const energiaGenerada = energiaDia! / factor!;
 
   //RESULTADO
-  const panelesRequeridos = Math.ceil(energiaGenerada / potenciaPanel);  
+  const panelesRequeridos = energiaGenerada / potenciaPanel!;
 
   try {
     const data = await resend.emails.send({
@@ -53,7 +52,6 @@ export async function sendEmail(data: any) {
         panelesRequeridos,
       }),
     });
-    console.log(data);
     return { success: true, data };
   } catch (error) {
     return { success: false, error };

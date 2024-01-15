@@ -83,7 +83,6 @@ export const columnas = [
   "Factor de Generación",
 ];
 
-
 export const incrementoanual = [
   {
     fee: "PDBT",
