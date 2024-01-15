@@ -6,6 +6,9 @@ const ContactFormEmail = ({
   feeType,
   phoneNumber,
   email,
+  energiaAnual,
+  pagoAnual,
+  panelesRequeridos,
 }: any) => (
   <div>
     <h1>Nuevo Contacto | Cotizador EPI</h1>
@@ -18,6 +21,9 @@ const ContactFormEmail = ({
     <p>Telefono: {phoneNumber}</p>
     <p>Persona de Contacto: {name}</p>
     <p>Tipo de cotización: Paneles Solares</p>
+    <p>Consumo de energía anual: {energiaAnual}</p>
+    <p>Pago anual estimado: {pagoAnual}</p>
+    <p>Paneles requeridos: {panelesRequeridos}</p>
   </div>
 );
 

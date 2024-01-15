@@ -57,30 +57,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { sendEmail } from "@/app/_actions";
 
-async function onSubmit(data: z.infer<typeof formSchema>) {
-  try {
-    await sendEmail(data);
-    const response = await fetch("/api/quotes", {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
-    console.log(response);
-    if (!response.ok) {
-      toast({
-        variant: "destructive",
-        title: "OH!",
-        description: "No se ha enviado correctamente el formulario",
-      });
-    }
-  } catch (error) {
-    console.log(error);
-    toast({
-      variant: "destructive",
-      title: "OH!",
-      description: "No se ha enviado correctamente el formulario",
-    });
-  }
-}
 
 const QuoteForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -96,7 +72,40 @@ const QuoteForm = () => {
     },
   });
 
-  const { register } = useForm();
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    try {
+      await sendEmail(data);
+      const response = await fetch("/api/quotes", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+      console.log(response);
+
+      if (response.ok) {
+        toast({
+          variant: "default",
+          title: "Se ha enviado correctamente el formulario",
+        });
+
+        form.reset();
+      }
+
+      if (!response.ok) {
+        toast({
+          variant: "destructive",
+          title: "OH!",
+          description: "No se ha enviado correctamente el formulario",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        variant: "destructive",
+        title: "OH!",
+        description: "No se ha enviado correctamente el formulario",
+      });
+    }
+  }  
 
   return (
     <Form {...form}>
@@ -159,13 +168,13 @@ const QuoteForm = () => {
                     <SelectValue placeholder="Tarifa" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="pdbt">pdbt</SelectItem>
-                    <SelectItem value="gdbt">gdbt</SelectItem>
-                    <SelectItem value="gdmth">gdmth</SelectItem>
-                    <SelectItem value="gdmto">gdmto</SelectItem>
-                    <SelectItem value="dis">dis</SelectItem>
-                    <SelectItem value="dist">gdmth</SelectItem>
-                    <SelectItem value="unknown">no sé</SelectItem>
+                    <SelectItem value="PDBT">PDBT</SelectItem>
+                    <SelectItem value="GDBT">GDBT</SelectItem>
+                    <SelectItem value="GDBTH">GDBTH</SelectItem>
+                    <SelectItem value="GDMTO">GDMTO</SelectItem>
+                    <SelectItem value="DIS">DIS</SelectItem>
+                    <SelectItem value="DIST">DIST</SelectItem>
+                    <SelectItem value="Promedio">No sé</SelectItem>
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -189,47 +198,48 @@ const QuoteForm = () => {
                     <SelectValue placeholder="Estado" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="aguascalientes">
-                      aguascalientes
+                    <SelectItem value="Aguascalientes">
+                      Aguascalientes
                     </SelectItem>
-                    <SelectItem value="baja_california">
-                      baja_california
+                    <SelectItem value="Baja California">
+                      Baja California
                     </SelectItem>
-                    <SelectItem value="baja_california_sur">
-                      baja_california_sur
+                    <SelectItem value="Baja California Sur">
+                      Baja California Sur
                     </SelectItem>
-                    <SelectItem value="campeche">campeche</SelectItem>
-                    <SelectItem value="chiapas">chiapas</SelectItem>
-                    <SelectItem value="chihuahua">chihuahua</SelectItem>
-                    <SelectItem value="coahuila">coahuila</SelectItem>
-                    <SelectItem value="colima">colima</SelectItem>
-                    <SelectItem value="durango">durango</SelectItem>
-                    <SelectItem value="estado_de_mexico">
-                      estado_de_mexico
+                    <SelectItem value="Campeche">Campeche</SelectItem>
+                    <SelectItem value="Chiapas">Chiapas</SelectItem>
+                    <SelectItem value="Chihuahua">Chihuahua</SelectItem>
+                    <SelectItem value="Coahuila">Coahuila</SelectItem>
+                    <SelectItem value="Colima">Colima</SelectItem>
+                    <SelectItem value="Ciudad de México">
+                      Ciudad de México
                     </SelectItem>
-                    <SelectItem value="guanajuato">guanajuato</SelectItem>
-                    <SelectItem value="guerrero">guerrero</SelectItem>
-                    <SelectItem value="hidalgo">hidalgo</SelectItem>
-                    <SelectItem value="jalisco">jalisco</SelectItem>
-                    <SelectItem value="michoacan">michoacan</SelectItem>
-                    <SelectItem value="morelos">morelos</SelectItem>
-                    <SelectItem value="nayarit">nayarit</SelectItem>
-                    <SelectItem value="nuevo_leon">nuevo_leon</SelectItem>
-                    <SelectItem value="oaxaca">oaxaca</SelectItem>
-                    <SelectItem value="puebla">puebla</SelectItem>
-                    <SelectItem value="queretaro">queretaro</SelectItem>
-                    <SelectItem value="quintana_roo">quintana_roo</SelectItem>
-                    <SelectItem value="san_luis_potosi">
-                      san_luis_potosi
+                    <SelectItem value="Durango">Durango</SelectItem>
+                    <SelectItem value="México">México</SelectItem>
+                    <SelectItem value="Guanajuato">Guanajuato</SelectItem>
+                    <SelectItem value="Guerrero">Guerrero</SelectItem>
+                    <SelectItem value="Hidalgo">Hidalgo</SelectItem>
+                    <SelectItem value="Jalisco">Jalisco</SelectItem>
+                    <SelectItem value="Michoacán">Michoacán</SelectItem>
+                    <SelectItem value="Morelos">Morelos</SelectItem>
+                    <SelectItem value="Nayarit">Nayarit</SelectItem>
+                    <SelectItem value="Nuevo León">Nuevo León</SelectItem>
+                    <SelectItem value="Oaxaca">Oaxaca</SelectItem>
+                    <SelectItem value="Puebla">Puebla</SelectItem>
+                    <SelectItem value="Querétaro">Querétaro</SelectItem>
+                    <SelectItem value="Quintana Roo">Quintana Roo</SelectItem>
+                    <SelectItem value="San Luis Potosí">
+                      San Luis Potosí
                     </SelectItem>
-                    <SelectItem value="sinaloa">sinaloa</SelectItem>
-                    <SelectItem value="sonora">sonora</SelectItem>
-                    <SelectItem value="tabasco">tabasco</SelectItem>
-                    <SelectItem value="tamaulipas">tamaulipas</SelectItem>
-                    <SelectItem value="tlaxcala">tlaxcala</SelectItem>
-                    <SelectItem value="veracruz">veracruz</SelectItem>
-                    <SelectItem value="yucatan">yucatan</SelectItem>
-                    <SelectItem value="zacatecas">zacatecas</SelectItem>
+                    <SelectItem value="Sinaloa">Sinaloa</SelectItem>
+                    <SelectItem value="Sonora">Sonora</SelectItem>
+                    <SelectItem value="Tabasco">Tabasco</SelectItem>
+                    <SelectItem value="Tamaulipas">Tamaulipas</SelectItem>
+                    <SelectItem value="Tlaxcala">Tlaxcala</SelectItem>
+                    <SelectItem value="Veracruz">Veracruz</SelectItem>
+                    <SelectItem value="Yucatán">Yucatán</SelectItem>
+                    <SelectItem value="Zacatecas">Zacatecas</SelectItem>
                   </SelectContent>
                 </Select>
               </FormControl>
