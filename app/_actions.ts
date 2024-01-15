@@ -46,6 +46,7 @@ export async function sendEmail(data: any) {
         moneyMonthSpent,
         feeType,
         name,
+        email,
         phoneNumber,
         energiaAnual,
         pagoAnual,
