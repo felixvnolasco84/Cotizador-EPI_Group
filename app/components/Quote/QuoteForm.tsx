@@ -33,8 +33,8 @@ const formSchema = z.object({
   state: z.string().min(2, {
     message: "Valor Incorrecto",
   }),
-  monthSpent: z.string().min(2, {
-    message: "Cantidad Incorrecta",
+  moneyMonthSpent: z.string().min(2, {
+    message: "Valor Incorrecto",
   }),
   feeType: z.string().min(2, {
     message: "Valor Incorrecto",
@@ -55,14 +55,22 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { sendEmail } from "@/app/_actions";
 
 async function onSubmit(data: z.infer<typeof formSchema>) {
   try {
+    await sendEmail(data);
     const response = await fetch("/api/quotes", {
       method: "POST",
       body: JSON.stringify(data),
     });
-    if (response.ok) {
+    console.log(response);
+    if (!response.ok) {
+      toast({
+        variant: "destructive",
+        title: "OH!",
+        description: "No se ha enviado correctamente el formulario",
+      });
     }
   } catch (error) {
     console.log(error);
@@ -81,15 +89,14 @@ const QuoteForm = () => {
       name: "",
       company: "",
       state: "",
-      monthSpent: "",
+      moneyMonthSpent: "",
       feeType: "",
       phoneNumber: "",
       email: "",
     },
   });
 
-
-  const { register} = useForm()
+  const { register } = useForm();
 
   return (
     <Form {...form}>
@@ -101,7 +108,7 @@ const QuoteForm = () => {
             <FormItem>
               <FormLabel>Nombre:</FormLabel>
               <FormControl>
-                <Input placeholder="Felix Vega" {...field} />
+                <Input {...field} />
               </FormControl>
               {/* <FormDescription>denlednk.</FormDescription> */}
               <FormMessage />
@@ -110,12 +117,12 @@ const QuoteForm = () => {
         />
         <FormField
           control={form.control}
-          name="monthSpent"
+          name="moneyMonthSpent"
           render={({ field }) => (
             <FormItem>
               <FormLabel>En promedio, ¿Cuánto pagas de luz cada mes?</FormLabel>
               <FormControl>
-                <Input placeholder="10000" {...field} />
+                <Input type="number" {...field} />
               </FormControl>
               {/* <FormDescription>denlednk.</FormDescription> */}
               <FormMessage />
@@ -129,7 +136,7 @@ const QuoteForm = () => {
             <FormItem>
               <FormLabel>Nombre de tu empresa:</FormLabel>
               <FormControl>
-                <Input placeholder="Polygon" {...field} />
+                <Input {...field} />
               </FormControl>
               {/* <FormDescription>denlednk.</FormDescription> */}
               <FormMessage />
@@ -144,8 +151,11 @@ const QuoteForm = () => {
             <FormItem>
               <FormLabel>¿Cuál es tu tarifa de CFE?</FormLabel>
               <FormControl>
-                <Select>
-                  <SelectTrigger className="w-[180px]" >
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Tarifa" />
                   </SelectTrigger>
                   <SelectContent>
@@ -171,7 +181,10 @@ const QuoteForm = () => {
             <FormItem>
               <FormLabel>Estado donde está tu empresa:</FormLabel>
               <FormControl>
-                <Select>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Estado" />
                   </SelectTrigger>
@@ -231,9 +244,9 @@ const QuoteForm = () => {
           name="phoneNumber"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Teléfono celular:</FormLabel>
+              <FormLabel id="">Teléfono celular:</FormLabel>
               <FormControl>
-                <Input placeholder="55329289..." {...field} />
+                <Input {...field} />
               </FormControl>
               {/* <FormDescription>denlednk.</FormDescription> */}
               <FormMessage />
@@ -248,7 +261,7 @@ const QuoteForm = () => {
             <FormItem>
               <FormLabel>Email:</FormLabel>
               <FormControl>
-                <Input placeholder="felix@polygonag.com" {...field} />
+                <Input {...field} />
               </FormControl>
               {/* <FormDescription>denlednk.</FormDescription> */}
               <FormMessage />

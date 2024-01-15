@@ -1,4 +1,4 @@
-import Image from "next/image";
+
 import QuoteForm from "./components/Quote/QuoteForm";
 
 export default function Home() {
