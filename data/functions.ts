@@ -1,11 +1,32 @@
-import { columnas, estados, incrementoanual, valores } from "./data";
+import {
+  autosFueraCirculacion,
+  columnas,
+  equivalenciaArbolesPlantados,
+  estados,
+  factorDeEmision,
+  incrementoanual,
+  superficieCuadradaRequerida,
+  valores,
+} from "./data";
 
 export function obtenerValorTarifa(estado: string, columna: string) {
   const estadoIndex = estados.indexOf(estado);
   const columnaIndex = columnas.indexOf(columna);
 
   if (estadoIndex !== -1 && columnaIndex !== -1) {
-    return valores[estadoIndex][columnaIndex];
+    const res = valores[estadoIndex][columnaIndex];
+    return res;
+  } else {
+    return null; // O alguna otra indicación de valor inválido
+  }
+}
+
+export function obtenerValorFactorGeneracion(estado: string) {
+  const estadoIndex = estados.indexOf(estado);
+
+  if (estadoIndex !== -1) {
+    const res = valores[estadoIndex][7];
+    return res;
   } else {
     return null; // O alguna otra indicación de valor inválido
   }
@@ -31,6 +52,45 @@ export function pagoAnualEstimado(
   incrementoanual: number
 ) {
   const pagoAnual = pagoMensual * 12;
+  const incrementoAnual = incrementoanual + 1;
+  console.log(pagoAnual * incrementoAnual);
+  return pagoAnual * incrementoAnual;
+}
 
-  return pagoAnual * incrementoanual;
+export function obtenerGeneriaGeneradaAnual(
+  factorGeneracion: number,
+  numeroPaneles: number,
+  potenciaPanel: number
+) {
+  return factorGeneracion * 365 * (numeroPaneles * potenciaPanel);
+}
+
+export function ahorroEstimado(
+  generiaGeneradaAnual: number,
+  consumoEnergiaAnual: number
+) {
+  return generiaGeneradaAnual / consumoEnergiaAnual;
+}
+
+export function ahorroEstimadoPesos(
+  porcentajeAhorro: number,
+  consumoEnergiaAnual: number
+) {
+  return consumoEnergiaAnual * porcentajeAhorro;
+}
+
+export function toneladasMitigadas(energiaAnualGenerada: number) {
+  return energiaAnualGenerada * factorDeEmision;
+}
+
+export function arbolesPlantados(toneladasMitigadas: number) {
+  return toneladasMitigadas * equivalenciaArbolesPlantados;
+}
+
+export function autosFueraDeCirculacion(toneladasMitigadas: number) {
+  return toneladasMitigadas * autosFueraCirculacion;
+}
+
+export function calcularSuperficieRequerida(numeroPaneles: number) {
+  return numeroPaneles * superficieCuadradaRequerida;
 }

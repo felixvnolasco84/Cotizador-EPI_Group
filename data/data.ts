@@ -42,18 +42,17 @@ export const estados = [
   "Baja California",
   "Baja California Sur",
   "Campeche",
-  "Coahuila",
-  "Colima",
   "Chiapas",
   "Chihuahua",
+  "Coahuila",
+  "Colima",
   "Ciudad de México",
   "Durango",
+  "México",
   "Guanajuato",
   "Guerrero",
   "Hidalgo",
-  "Jalisco",
-  "México",
-  "Michoacán",
+  "Jalisco","Michoacán",
   "Morelos",
   "Nayarit",
   "Nuevo León",
@@ -115,3 +114,12 @@ export const incrementoanual = [
     otrosCargos: 0.01,
   },
 ];
+
+
+export const factorDeEmision = 0.000435;
+
+export const equivalenciaArbolesPlantados = 40.1488;
+
+export const autosFueraCirculacion = 2.608;
+
+export const superficieCuadradaRequerida = 3.3;

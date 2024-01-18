@@ -170,7 +170,7 @@ const QuoteForm = () => {
                   <SelectContent>
                     <SelectItem value="PDBT">PDBT</SelectItem>
                     <SelectItem value="GDBT">GDBT</SelectItem>
-                    <SelectItem value="GDBTH">GDBTH</SelectItem>
+                    <SelectItem value="GDMTH">GDMTH</SelectItem>
                     <SelectItem value="GDMTO">GDMTO</SelectItem>
                     <SelectItem value="DIS">DIS</SelectItem>
                     <SelectItem value="DIST">DIST</SelectItem>
