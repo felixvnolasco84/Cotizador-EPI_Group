@@ -123,3 +123,21 @@ export const equivalenciaArbolesPlantados = 40.1488;
 export const autosFueraCirculacion = 2.608;
 
 export const superficieCuadradaRequerida = 3.3;
+
+
+export const formSteps = [
+  {
+    id: "Paso 1",
+    name: "Consumo Energetico",
+    fields: ["moneyMonthSpent", "state", "feeType"],
+  },
+  {
+    id: "Paso 2",
+    name: "Datos de Contacto",
+    fields: ["name", "company", "email", "phoneNumber"],
+  },
+  {
+    id: "Resultados",
+    name: ""
+  }
+];

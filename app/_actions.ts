@@ -20,6 +20,8 @@ import { Resend } from "resend";
 
 const resend = new Resend("re_SWujrBS8_LVE4q4EQnF9F6wJvqtz7Q7fM");
 
+
+
 export async function sendEmail(data: any) {
   const { name, company, state, moneyMonthSpent, feeType, phoneNumber, email } =
     data;
@@ -115,7 +117,7 @@ export async function sendEmail(data: any) {
         superficieRequerida,
       }   ),
     });
-    return { success: true, data };
+    return { success: true, energiaAnual, pagoAnual, panelesRequeridos, generacionAnual, ahorroEstimadoPorcentaje, ahorroEstimadoDinero, numeroToneladasMitigadas, numeroArbolesPlantados, numeroAutosFueraCirculacion, superficieRequerida };
   } catch (error) {
     return { success: false, error };
   }
