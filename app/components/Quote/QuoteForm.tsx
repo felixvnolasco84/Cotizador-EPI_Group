@@ -2,7 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
+import { NumericFormat } from "react-number-format";
 import { toast } from "@/components/ui/use-toast";
 import {
   Select,
@@ -14,38 +15,8 @@ import {
 
 import * as z from "zod";
 
-const formSchema = z.object({
-  name: z
-    .string()
-    .min(2, {
-      message: "El nombre debe tener al menos 2 carácteres.",
-    })
-    .max(160, {
-      message: "El nombre no puede tener más de 160 carácteres.",
-    }),
-  company: z
-    .string()
-    .min(2, {
-      message: "El nombre debe tener al menos 2 carácteres.",
-    })
-    .max(160, {
-      message: "El nombre no puede tener más de 160 carácteres.",
-    }),
-  state: z.string().min(2, {
-    message: "Valor Incorrecto",
-  }),
-  moneyMonthSpent: z.string().min(2, {
-    message: "Valor Incorrecto",
-  }),
-  feeType: z.string().min(2, {
-    message: "Valor Incorrecto",
-  }),
-  phoneNumber: z.string().min(2, {
-    message: "Valor Incorrecto",
-  }),
-  email: z.string().email({ message: "Correo electrónico Inválido" }),
-});
-import { Button } from "@/components/ui/button";
+import Puff from "@/public/images/puff.svg";
+
 import {
   Form,
   FormControl,
@@ -59,6 +30,14 @@ import { Input } from "@/components/ui/input";
 import { sendEmail } from "@/app/_actions";
 import { useState } from "react";
 import { formSteps } from "@/data/data";
+import {
+  BellElectricIcon,
+  DollarSignIcon,
+  HomeIcon,
+  PowerCircleIcon,
+} from "lucide-react";
+import ResultComponent from "@/components/Result/ResultComponent";
+import MoneyInput from "@/components/ui/moneyInput";
 
 const QuoteForm = () => {
   const [previousStep, setPreviousStep] = useState(0);
@@ -67,6 +46,38 @@ const QuoteForm = () => {
   const [quote, setQuote] = useState<any>(null);
 
   const delta = currentStep - previousStep;
+
+  const formSchema = z.object({
+    name: z
+      .string()
+      .min(2, {
+        message: "El nombre debe tener al menos 2 carácteres.",
+      })
+      .max(160, {
+        message: "El nombre no puede tener más de 160 carácteres.",
+      }),
+    company: z
+      .string()
+      .min(2, {
+        message: "El nombre de la empresa debe tener al menos 2 carácteres.",
+      })
+      .max(160, {
+        message: "El nombre no puede tener más de 160 carácteres.",
+      }),
+    state: z.string().min(2, {
+      message: "Se necesita escoger un estado",
+    }),
+    moneyMonthSpent: z.string().min(2, {
+      message: "Se necesita establecer un gasto mensual",
+    }),
+    feeType: z.string().min(2, {
+      message: "Se necesita establecer un tipo de tarifa",
+    }),
+    phoneNumber: z.string().min(2, {
+      message: "Se necesita establecer un número de contacto",
+    }),
+    email: z.string().email({ message: "Correo electrónico Inválido" }),
+  });
 
   type Inputs = z.infer<typeof formSchema>;
 
@@ -82,7 +93,6 @@ const QuoteForm = () => {
 
     if (currentStep < formSteps.length - 1) {
       if (currentStep === formSteps.length - 2) {
-        
         form.handleSubmit(onSubmit)();
       }
       setPreviousStep(currentStep);
@@ -111,16 +121,14 @@ const QuoteForm = () => {
   });
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
+   
     try {
       setLoading(true);
       const quote = await sendEmail(data);
       const response = await fetch("/api/quotes", {
         method: "POST",
         body: JSON.stringify(data),
-      });
-      console.log(response);
-      console.log(quote);
-
+      });      
       setQuote(quote);
 
       if (response.ok) {
@@ -193,121 +201,138 @@ const QuoteForm = () => {
               initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="flex flex-col gap-4"
+              className="flex"
             >
-              <FormField
-                control={form.control}
-                name="moneyMonthSpent"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      En promedio, ¿Cuánto pagas de luz cada mes?
-                    </FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                    {/* <FormDescription>denlednk.</FormDescription> */}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="feeType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>¿Cuál es tu tarifa de CFE?</FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Tarifa" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="PDBT">PDBT</SelectItem>
-                          <SelectItem value="GDBT">GDBT</SelectItem>
-                          <SelectItem value="GDMTH">GDMTH</SelectItem>
-                          <SelectItem value="GDMTO">GDMTO</SelectItem>
-                          <SelectItem value="DIS">DIS</SelectItem>
-                          <SelectItem value="DIST">DIST</SelectItem>
-                          <SelectItem value="Promedio">No sé</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    {/* <FormDescription>denlednk.</FormDescription> */}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="state"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Estado donde está tu empresa:</FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Estado" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Aguascalientes">
-                            Aguascalientes
-                          </SelectItem>
-                          <SelectItem value="Baja California">
-                            Baja California
-                          </SelectItem>
-                          <SelectItem value="Baja California Sur">
-                            Baja California Sur
-                          </SelectItem>
-                          <SelectItem value="Campeche">Campeche</SelectItem>
-                          <SelectItem value="Chiapas">Chiapas</SelectItem>
-                          <SelectItem value="Chihuahua">Chihuahua</SelectItem>
-                          <SelectItem value="Coahuila">Coahuila</SelectItem>
-                          <SelectItem value="Colima">Colima</SelectItem>
-                          <SelectItem value="Ciudad de México">
-                            Ciudad de México
-                          </SelectItem>
-                          <SelectItem value="Durango">Durango</SelectItem>
-                          <SelectItem value="México">México</SelectItem>
-                          <SelectItem value="Guanajuato">Guanajuato</SelectItem>
-                          <SelectItem value="Guerrero">Guerrero</SelectItem>
-                          <SelectItem value="Hidalgo">Hidalgo</SelectItem>
-                          <SelectItem value="Jalisco">Jalisco</SelectItem>
-                          <SelectItem value="Michoacán">Michoacán</SelectItem>
-                          <SelectItem value="Morelos">Morelos</SelectItem>
-                          <SelectItem value="Nayarit">Nayarit</SelectItem>
-                          <SelectItem value="Nuevo León">Nuevo León</SelectItem>
-                          <SelectItem value="Oaxaca">Oaxaca</SelectItem>
-                          <SelectItem value="Puebla">Puebla</SelectItem>
-                          <SelectItem value="Querétaro">Querétaro</SelectItem>
-                          <SelectItem value="Quintana Roo">
-                            Quintana Roo
-                          </SelectItem>
-                          <SelectItem value="San Luis Potosí">
-                            San Luis Potosí
-                          </SelectItem>
-                          <SelectItem value="Sinaloa">Sinaloa</SelectItem>
-                          <SelectItem value="Sonora">Sonora</SelectItem>
-                          <SelectItem value="Tabasco">Tabasco</SelectItem>
-                          <SelectItem value="Tamaulipas">Tamaulipas</SelectItem>
-                          <SelectItem value="Tlaxcala">Tlaxcala</SelectItem>
-                          <SelectItem value="Veracruz">Veracruz</SelectItem>
-                          <SelectItem value="Yucatán">Yucatán</SelectItem>
-                          <SelectItem value="Zacatecas">Zacatecas</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    {/* <FormDescription>denlednk.</FormDescription> */}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="flex w-1/3 flex-col items-center space-y-2">
+                <DollarSignIcon className="h-8 w-8 text-sky-800" />
+                <FormField
+                  control={form.control}
+                  name="moneyMonthSpent"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-center justify-center text-center">
+                      <FormLabel>
+                        En promedio, ¿Cuánto pagas de luz cada mes?
+                      </FormLabel>
+                      <MoneyInput
+                        control={form.control}
+                        name="moneyMonthSpent"
+                        error={form.formState.errors.moneyMonthSpent}
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex w-1/3 flex-col items-center space-y-2">
+                <PowerCircleIcon className="h-8 w-8 text-sky-800" />
+                <FormField
+                  control={form.control}
+                  name="feeType"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-center justify-center text-center">
+                      <FormLabel>¿Cuál es tu tarifa de CFE?</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger className="max-w-40">
+                            <SelectValue placeholder="Tarifa" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="PDBT">PDBT</SelectItem>
+                            <SelectItem value="GDBT">GDBT</SelectItem>
+                            <SelectItem value="GDMTH">GDMTH</SelectItem>
+                            <SelectItem value="GDMTO">GDMTO</SelectItem>
+                            <SelectItem value="DIS">DIS</SelectItem>
+                            <SelectItem value="DIST">DIST</SelectItem>
+                            <SelectItem value="Promedio">No sé</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      {/* <FormDescription>denlednk.</FormDescription> */}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="flex w-1/3 flex-col items-center space-y-2">
+                <HomeIcon className="h-8 w-8 text-sky-800" />
+                <FormField
+                  control={form.control}
+                  name="state"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-center justify-center text-center">
+                      <FormLabel>Estado donde está tu empresa:</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger className="max-w-40">
+                            <SelectValue placeholder="Estado" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Aguascalientes">
+                              Aguascalientes
+                            </SelectItem>
+                            <SelectItem value="Baja California">
+                              Baja California
+                            </SelectItem>
+                            <SelectItem value="Baja California Sur">
+                              Baja California Sur
+                            </SelectItem>
+                            <SelectItem value="Campeche">Campeche</SelectItem>
+                            <SelectItem value="Chiapas">Chiapas</SelectItem>
+                            <SelectItem value="Chihuahua">Chihuahua</SelectItem>
+                            <SelectItem value="Coahuila">Coahuila</SelectItem>
+                            <SelectItem value="Colima">Colima</SelectItem>
+                            <SelectItem value="Ciudad de México">
+                              Ciudad de México
+                            </SelectItem>
+                            <SelectItem value="Durango">Durango</SelectItem>
+                            <SelectItem value="México">México</SelectItem>
+                            <SelectItem value="Guanajuato">
+                              Guanajuato
+                            </SelectItem>
+                            <SelectItem value="Guerrero">Guerrero</SelectItem>
+                            <SelectItem value="Hidalgo">Hidalgo</SelectItem>
+                            <SelectItem value="Jalisco">Jalisco</SelectItem>
+                            <SelectItem value="Michoacán">Michoacán</SelectItem>
+                            <SelectItem value="Morelos">Morelos</SelectItem>
+                            <SelectItem value="Nayarit">Nayarit</SelectItem>
+                            <SelectItem value="Nuevo León">
+                              Nuevo León
+                            </SelectItem>
+                            <SelectItem value="Oaxaca">Oaxaca</SelectItem>
+                            <SelectItem value="Puebla">Puebla</SelectItem>
+                            <SelectItem value="Querétaro">Querétaro</SelectItem>
+                            <SelectItem value="Quintana Roo">
+                              Quintana Roo
+                            </SelectItem>
+                            <SelectItem value="San Luis Potosí">
+                              San Luis Potosí
+                            </SelectItem>
+                            <SelectItem value="Sinaloa">Sinaloa</SelectItem>
+                            <SelectItem value="Sonora">Sonora</SelectItem>
+                            <SelectItem value="Tabasco">Tabasco</SelectItem>
+                            <SelectItem value="Tamaulipas">
+                              Tamaulipas
+                            </SelectItem>
+                            <SelectItem value="Tlaxcala">Tlaxcala</SelectItem>
+                            <SelectItem value="Veracruz">Veracruz</SelectItem>
+                            <SelectItem value="Yucatán">Yucatán</SelectItem>
+                            <SelectItem value="Zacatecas">Zacatecas</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      {/* <FormDescription>denlednk.</FormDescription> */}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </motion.div>
           )}
           {currentStep === 1 && (
@@ -382,11 +407,64 @@ const QuoteForm = () => {
             </motion.div>
           )}
           {currentStep === 2 && (
-            <div className="flex flex-col">
+            <div className="flex flex-col items-center justify-center">
               {loading ? (
-                <p>Cotizando...</p>
+                <svg
+                  width="44"
+                  height="44"
+                  viewBox="0 0 44 44"
+                  xmlns="http://www.w3.org/2000/svg"
+                  stroke="#1a1a1a"
+                >
+                  <g fill="none" fill-rule="evenodd" stroke-width="2">
+                    <circle cx="22" cy="22" r="1">
+                      <animate
+                        attributeName="r"
+                        begin="0s"
+                        dur="1.8s"
+                        values="1; 20"
+                        calcMode="spline"
+                        keyTimes="0; 1"
+                        keySplines="0.165, 0.84, 0.44, 1"
+                        repeatCount="indefinite"
+                      />
+                      <animate
+                        attributeName="stroke-opacity"
+                        begin="0s"
+                        dur="1.8s"
+                        values="1; 0"
+                        calcMode="spline"
+                        keyTimes="0; 1"
+                        keySplines="0.3, 0.61, 0.355, 1"
+                        repeatCount="indefinite"
+                      />
+                    </circle>
+                    <circle cx="22" cy="22" r="1">
+                      <animate
+                        attributeName="r"
+                        begin="-0.9s"
+                        dur="1.8s"
+                        values="1; 20"
+                        calcMode="spline"
+                        keyTimes="0; 1"
+                        keySplines="0.165, 0.84, 0.44, 1"
+                        repeatCount="indefinite"
+                      />
+                      <animate
+                        attributeName="stroke-opacity"
+                        begin="-0.9s"
+                        dur="1.8s"
+                        values="1; 0"
+                        calcMode="spline"
+                        keyTimes="0; 1"
+                        keySplines="0.3, 0.61, 0.355, 1"
+                        repeatCount="indefinite"
+                      />
+                    </circle>
+                  </g>
+                </svg>
               ) : (
-                quote !== null && <p>{JSON.stringify(quote)}</p>
+                quote !== null && <ResultComponent quote={quote} />
               )}
             </div>
           )}

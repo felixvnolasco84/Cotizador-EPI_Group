@@ -25,6 +25,7 @@ const resend = new Resend("re_SWujrBS8_LVE4q4EQnF9F6wJvqtz7Q7fM");
 export async function sendEmail(data: any) {
   const { name, company, state, moneyMonthSpent, feeType, phoneNumber, email } =
     data;
+    const moneyMonthSpentNumber = Number(moneyMonthSpent.replace(/[^0-9]/g, ""));    
   // Calcular el valor de la tarifa
   const tarifa = obtenerValorTarifa(state, feeType);
 
@@ -35,7 +36,7 @@ export async function sendEmail(data: any) {
 
   // Calcular el valor de la energía anual
   const energiaAnual = obtenerEnergiaAnual(
-    moneyMonthSpent,
+    moneyMonthSpentNumber,
     tarifa ?? 0
   );
 
@@ -43,7 +44,7 @@ export async function sendEmail(data: any) {
 
   // Calcular el valor del pago anual estimado
   const pagoAnual = pagoAnualEstimado(
-    moneyMonthSpent,
+    moneyMonthSpentNumber,
     incrementoEstimado ?? 0
   );
 
@@ -91,32 +92,32 @@ export async function sendEmail(data: any) {
 
   const superficieRequerida = calcularSuperficieRequerida(panelesRequeridos);
 
-  //Enviar el email de contacto
+  // Enviar el email de contacto
   try {
-    const data = await resend.emails.send({
-      from: "hola@polygonag.com",
-      to: [email],
-      subject: "Nuevo contacto | Cotizador EPI",
-      react: ContactFormEmail( {
-        name,
-        company,
-        state,
-        moneyMonthSpent,
-        feeType,
-        phoneNumber,
-        email,
-        energiaAnual,
-        pagoAnual,
-        panelesRequeridos,
-        generacionAnual,
-        ahorroEstimadoPorcentaje,
-        ahorroEstimadoDinero,
-        numeroToneladasMitigadas,
-        numeroArbolesPlantados,
-        numeroAutosFueraCirculacion,
-        superficieRequerida,
-      }   ),
-    });
+    // const data = await resend.emails.send({
+    //   from: "hola@polygonag.com",
+    //   to: [email],
+    //   subject: "Nuevo contacto | Cotizador EPI",
+    //   react: ContactFormEmail( {
+    //     name,
+    //     company,
+    //     state,
+    //     moneyMonthSpent,
+    //     feeType,
+    //     phoneNumber,
+    //     email,
+    //     energiaAnual,
+    //     pagoAnual,
+    //     panelesRequeridos,
+    //     generacionAnual,
+    //     ahorroEstimadoPorcentaje,
+    //     ahorroEstimadoDinero,
+    //     numeroToneladasMitigadas,
+    //     numeroArbolesPlantados,
+    //     numeroAutosFueraCirculacion,
+    //     superficieRequerida,
+    //   }   ),
+    // });
     return { success: true, energiaAnual, pagoAnual, panelesRequeridos, generacionAnual, ahorroEstimadoPorcentaje, ahorroEstimadoDinero, numeroToneladasMitigadas, numeroArbolesPlantados, numeroAutosFueraCirculacion, superficieRequerida };
   } catch (error) {
     return { success: false, error };
