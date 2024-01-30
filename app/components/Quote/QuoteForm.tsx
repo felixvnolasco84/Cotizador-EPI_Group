@@ -2,8 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { useForm, Controller } from "react-hook-form";
-import { NumericFormat } from "react-number-format";
+import { useForm } from "react-hook-form";
 import { toast } from "@/components/ui/use-toast";
 import {
   Select,
@@ -12,10 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-import * as z from "zod";
-
-import Puff from "@/public/images/puff.svg";
 
 import {
   Form,
@@ -26,18 +21,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
 import { sendEmail } from "@/app/_actions";
 import { useState } from "react";
 import { formSteps } from "@/data/data";
-import {
-  BellElectricIcon,
-  DollarSignIcon,
-  HomeIcon,
-  PowerCircleIcon,
-} from "lucide-react";
+import { DollarSignIcon, HomeIcon, PowerCircleIcon } from "lucide-react";
 import ResultComponent from "@/components/Result/ResultComponent";
 import MoneyInput from "@/components/ui/moneyInput";
+import * as z from "zod";
+import { FieldName, formSchema } from "@/lib/utils";
 
 const QuoteForm = () => {
   const [previousStep, setPreviousStep] = useState(0);
@@ -46,42 +39,6 @@ const QuoteForm = () => {
   const [quote, setQuote] = useState<any>(null);
 
   const delta = currentStep - previousStep;
-
-  const formSchema = z.object({
-    name: z
-      .string()
-      .min(2, {
-        message: "El nombre debe tener al menos 2 carácteres.",
-      })
-      .max(160, {
-        message: "El nombre no puede tener más de 160 carácteres.",
-      }),
-    company: z
-      .string()
-      .min(2, {
-        message: "El nombre de la empresa debe tener al menos 2 carácteres.",
-      })
-      .max(160, {
-        message: "El nombre no puede tener más de 160 carácteres.",
-      }),
-    state: z.string().min(2, {
-      message: "Se necesita escoger un estado",
-    }),
-    moneyMonthSpent: z.string().min(2, {
-      message: "Se necesita establecer un gasto mensual",
-    }),
-    feeType: z.string().min(2, {
-      message: "Se necesita establecer un tipo de tarifa",
-    }),
-    phoneNumber: z.string().min(2, {
-      message: "Se necesita establecer un número de contacto",
-    }),
-    email: z.string().email({ message: "Correo electrónico Inválido" }),
-  });
-
-  type Inputs = z.infer<typeof formSchema>;
-
-  type FieldName = keyof Inputs;
 
   const next = async () => {
     const fields = formSteps[currentStep].fields;
@@ -121,14 +78,13 @@ const QuoteForm = () => {
   });
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
-   
     try {
       setLoading(true);
       const quote = await sendEmail(data);
       const response = await fetch("/api/quotes", {
         method: "POST",
         body: JSON.stringify(data),
-      });      
+      });
       setQuote(quote);
 
       if (response.ok) {
@@ -250,7 +206,7 @@ const QuoteForm = () => {
                           </SelectContent>
                         </Select>
                       </FormControl>
-                      {/* <FormDescription>denlednk.</FormDescription> */}
+
                       <FormMessage />
                     </FormItem>
                   )}
@@ -327,7 +283,7 @@ const QuoteForm = () => {
                           </SelectContent>
                         </Select>
                       </FormControl>
-                      {/* <FormDescription>denlednk.</FormDescription> */}
+
                       <FormMessage />
                     </FormItem>
                   )}
@@ -351,7 +307,7 @@ const QuoteForm = () => {
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    {/* <FormDescription>denlednk.</FormDescription> */}
+
                     <FormMessage />
                   </FormItem>
                 )}
@@ -366,7 +322,7 @@ const QuoteForm = () => {
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    {/* <FormDescription>denlednk.</FormDescription> */}
+
                     <FormMessage />
                   </FormItem>
                 )}
@@ -381,7 +337,7 @@ const QuoteForm = () => {
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    {/* <FormDescription>denlednk.</FormDescription> */}
+
                     <FormMessage />
                   </FormItem>
                 )}
@@ -396,7 +352,7 @@ const QuoteForm = () => {
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    {/* <FormDescription>denlednk.</FormDescription> */}
+
                     <FormMessage />
                   </FormItem>
                 )}

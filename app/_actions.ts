@@ -9,6 +9,7 @@ import {
   calcularSuperficieRequerida,
   obtenerEnergiaAnual,
   obtenerGeneriaGeneradaAnual,
+  obtenerOtrosCargos,
   obtenerValorFactorGeneracion,
   obtenerValorIncrementoEstimado,
   obtenerValorTarifa,
@@ -58,7 +59,7 @@ export async function sendEmail(data: any) {
   const energiaGenerada = energiaDia / (factor ?? 0);
 
   // Calcular el valor de los paneles requeridos
-  const panelesRequeridos = energiaGenerada / potenciaPanel;
+  const panelesRequeridos = Math.floor(energiaGenerada / potenciaPanel);
 
   // Calcular el valor de la generación anual
   const generacionAnual = obtenerGeneriaGeneradaAnual(
@@ -67,16 +68,19 @@ export async function sendEmail(data: any) {
     potenciaPanel
   );
 
+  const otroscargos = obtenerOtrosCargos(feeType);
+ 
   // Calcular el valor del ahorro estimado
   const ahorroEstimadoPorcentaje = ahorroEstimado(
     generacionAnual,
-    energiaAnual
+    energiaAnual,
+    otroscargos ?? 0
   );
 
   // Calcular el valor del ahorro estimado en pesos
   const ahorroEstimadoDinero = ahorroEstimadoPesos(
     ahorroEstimadoPorcentaje,
-    energiaAnual
+    pagoAnual
   );
 
   // Calcular el valor de la tonelada mitigada
@@ -127,3 +131,11 @@ export async function sendEmail(data: any) {
   //   return { success: false, error: result.error.format() };
   // }
 }
+
+// export async function sendWhatsAppMessage(message: string) {
+    
+//   if (result.error) {
+//     return { success: false, error: result.error.format() };
+//   }
+//   return { success: true };
+// }

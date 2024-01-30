@@ -62,21 +62,34 @@ export function obtenerGeneriaGeneradaAnual(
   numeroPaneles: number,
   potenciaPanel: number
 ) {
-  return factorGeneracion * 365 * (numeroPaneles * potenciaPanel);
+  const result = factorGeneracion * (365 * numeroPaneles * potenciaPanel); 
+  return result;
+}
+
+export function obtenerOtrosCargos(tarifa: string) {
+  const index = incrementoanual.findIndex(
+    (incremento) => incremento.fee === tarifa
+  );
+  if (index !== -1) {
+    return incrementoanual[index].otrosCargos;
+  } else {
+    return null;
+  }
 }
 
 export function ahorroEstimado(
   generiaGeneradaAnual: number,
-  consumoEnergiaAnual: number
+  consumoEnergiaAnual: number,
+  otrosCargos: number
 ) {
-  return generiaGeneradaAnual / consumoEnergiaAnual;
+  return ((generiaGeneradaAnual / consumoEnergiaAnual - otrosCargos) * 100);
 }
 
 export function ahorroEstimadoPesos(
   porcentajeAhorro: number,
-  consumoEnergiaAnual: number
-) {
-  return consumoEnergiaAnual * porcentajeAhorro;
+  pagoAnualEstimado: number 
+) { 
+  return pagoAnualEstimado * (porcentajeAhorro / 100);
 }
 
 export function toneladasMitigadas(energiaAnualGenerada: number) {
